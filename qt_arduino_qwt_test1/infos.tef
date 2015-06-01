@@ -1,0 +1,26 @@
+## PLOTTING RANDOMLY GENERATED DATA FROM ARDUINO COMING FROM SERIAL IN QT QWT ##
+## USING A CLASS FOR THAT (..)
+
+# to be able to compile & link against the 'qextserialport'lib as a shared library & also the 'qwt' lib, also as a shared library:
+
+# 1: go to the directory we extracted 'qextserialport' in, then:
+qmake
+make
+sudo make install
+
+# 1bis: go to the directory we extracted 'qwt' in, then;
+make
+sudo make install
+
+# 2: once the 'qextserialport' library has been correctly generated & installed, we need to add the following to the '.pro' file to link against the installed 'qextserialport' shared library
+CONFIG += extserialport
+
+# 2bis: similarly, we have to add the following to link against the installed 'qwt' shared library
+CONFIG += qwt
+
+# 3: then, to compile:
+qmake
+make
+
+# 4: ultimately, to run:
+./<appname>
