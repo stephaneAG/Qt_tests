@@ -1,0 +1,88 @@
+How to compile a shared library on Linux GCC:
+
+Step1: compiling with Position Independent Code
+ ' gcc -c -Wall -Werror -fpic desktopwindow.c '   or   ' gcc -c -Wall -Werror -fpic desktopwindow.c -lX11 ' if we need to compile against the Xlib for example 
+
+Step2: Creating a shared library from an object file
+ ' gcc -shared -o libdesktopwindow.so desktopwindow.o ' 
+
+Step3: Linking with a shared library
+ ' gcc -Wall -o test main.c -ldesktopwindow '
+
+>> /usr/bin/ld: cannot find -ldesktopwindow
+>> collect2: error: ld returned 1 exit status
+
+Telling GCC where to find the shared library
+ ' gcc -L/home/stephaneag/Documents/Development/dev__Qt/desktopWindow_shared_lib -Wall -o test main.c -ldesktopwindow '
+
+    or  ' gcc -L/home/stephaneag/Documents/Development/dev__Qt/desktopWindow_shared_lib -Wall -o test main.c -ldesktopwindow -lX11 '  if we need to compile against the Xlib for example
+
+Step4: Making the library available at runtime
+ ' ./test '
+>> ./test: error while loading shared libraries: libdesktopwindow.so: cannot open shared object file: No such file or directory
+
+Now, we have few options: we can use the environment variable 'LD_LIBRARY_PATH', or 'rpath'
+
+## A : using 'LD_LIBRARY_PATH' ##
+ ' echo $LD_LIBRARY_PATH '
+As it is empty, let's fix that by appending our working directory to the existing 'LD_LIBRARY_PATH'
+ ' LD_LIBRARY_PATH=/home/stephaneag/Documents/Development/dev__Qt/desktopWindow_shared_lib:$LD_LIBRARY_PATH ' 
+ ' ./test '
+>> ./test: error while loading shared libraries: libdesktopwindow.so: cannot open shared object file: No such file or directory
+
+Yup, our idrectory is in 'LD_LIBRARY_PATH', but we didn't export it
+ ' export LD_LIBRARY_PATH=/home/stephaneag/Documents/Development/dev__Qt/desktopWindow_shared_lib:$LD_LIBRARY_PATH '
+ ' ./test '
+
+>> WORKING ! ;)
+
+## end A ##
+
+[ before doing anything else, let's first clear 'LD_LIBRARY_PATH' ]
+ ' unset LD_LIBRARY_PATH ' 
+
+## B : using rpath ##
+ ' gcc -L/home/stephaneag/Documents/Development/dev__Qt/desktopWindow_shared_lib -Wl,-rpath=/home/stephaneag/Documents/Development/dev__Qt/desktopWindow_shared_lib -Wall -o test main.c -ldesktopwindow '
+ ' ./test '
+
+>> WORKING !
+
+## end B ##
+
+## C : using 'ldconfig' to modify 'ld.so' ##
+
+To install our library so that everybody on the system can use it, we'll need admin privileges:
+-1st, to put the library in a standard location ( '/usr/lib' or '/usr/local/lib' )
+-2nd, to modify the 'ld.so' config file and cache
+
+As root, do the following:
+ (sudo) ' cp ./libdesktopwindow.so /usr/lib ' 
+ (sudo) ' chmod 0755 /usr/lib/libdesktopwindow.so '
+
+Now that it is in a standard location, with correct permissions, readable by everybody;
+However, we need to tell the loader it's available for use, by updating the cache:
+ (sudo) ' ldconfig '
+
+Let's double check that we have created a link to our library and that the cache has been updated so it's available for immediate use:
+ (sudo) ' ldconfig -p | grep desktopwindow '  
+
+>> libdesktopwindow.so (libc6,x86-64) => /usr/lib/libdesktopwindow.so
+---> Now our library is installed
+
+Before testing it, we have to clean up a few things:
+-clean our 'LD_LIBRARY_PATH' once more, just in case
+ ' unset LD_LIBRARY_PATH '
+- Re-link our executable ( we don't need the '-L' option since our library is stored in a default location & we aren't using the rpath option )
+ ' gcc -Wall -o test main.c -ldesktopwindow ' or ' gcc -Wall -o test main.c -ldesktopwindow -lX11 ' if we need to compile against the Xlib for example
+
+Let's make sure we're using the /usr/lib instance of our library using 'ldd'
+ ' ldd test | grep desktopwindow '  and  '  ldd test | grep X11 ' to make sure the X11 Xlib has as well been linked against
+>> libdesktopwindow.so => /usr/lib/libdesktopwindow.so (0x00007fa25719f000)
+--> Good!
+
+Let's run it:
+ ' ./test '
+
+>> WORKING !
+
+## end C ##
