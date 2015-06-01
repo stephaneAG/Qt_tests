@@ -1,0 +1,14 @@
+# R: to compile a C program and link it against shared libraries ( personal or system's ):
+
+# A: when we only have our own library as dependency, we have to follow the other 'info_*.tef' file for instructions on how to compile the library, and then:
+ ' gcc -Wall -o desktopwindow_hotfix main__with_libdesktopwindow.c -ldesktopwindow ' 
+
+# B: if we are using any other dependency, we have to add their '-l*' parameter as well, or it won't compile & throw errors:
+ 'gcc -Wall -o desktopwindow_hotfix main__with_libdesktopwindow.c -ldesktopwindow -lX11  ' 
+
+# Then, to run the program, we only have to do:
+ ' ./desktopwindow_hotfix '
+    
+    or
+
+ ' ./desktopwindow_hotfix "$progwinid" "$deskwinid" ' if our program needs to be passe arguments   
