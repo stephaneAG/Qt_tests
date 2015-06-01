@@ -1,0 +1,4 @@
+# Here, I followed what I had found when trying to compile the "audioinput" & "audiooutput" examples
+# It didn't ( for now ) bother with trying the setup provided in the downloaded "*.pro" file ( ..)
+# -> Still, the project compiles fine, but we get a "no radio found" message in the application main's screen ( wich is quite normal, as we don't ( do we ? *) have any radio receiver/emitter in our laptops ... except the WiFi & bluetooth ? ;D
+# * yup -> as usual, "I'll have to try to know" ;p
