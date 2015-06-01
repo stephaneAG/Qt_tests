@@ -1,0 +1,30 @@
+# R: to compile correctly ( at least with Qt 4.8 on Ubuntu 13.04 ), we need to fix some of the Qt's team errors :/
+# -> from the online tutorials, we can download the entire file, but we need to edit two of them: the "*.pro" file, & the generated "Makefile"
+#
+# Note: I personallychoosed to generate a clean "*.pro" file using the "qmake -project" command, & then edit it to fix the necessary ( as follows ). 
+#
+# Note2: The same approach is used for both the "audioinput" & the "audiooutput" examples ( & maybe also the 3rd example from the online tutorials -> got to test ( .. ) )
+
+## - for the "*.pro" file - ##
+# -> we add the following:
+#
+#  after: " INCLUDEPATH += . "
+# we add: " INCLUDEPATH += /usr/include/QtMultimediaKit /usr/include/QtMobility "
+#
+#  after: " SOURCES += audiooutput.cpp main.cpp "
+# we add: " QT      += multimedia "
+#
+
+## - for the "Makefile" file - ##
+# -> we change the following:
+#
+#  change: " INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtMultimedia ..."
+#      to: " INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtMultimediaKit ... "
+#
+#  & also: " LIBS          = $(SUBLIBS)  -L/usr/lib/x86_64-linux-gnu -lQtMultimedia ... "
+#      to: " LIBS          = $(SUBLIBS)  -L/usr/lib/x86_64-linux-gnu -lQtMultimediaKit "
+#
+
+
+# After this, both programs sources should compile correctly
+# -> ENjoy :p
