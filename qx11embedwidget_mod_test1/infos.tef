@@ -1,0 +1,1 @@
+As of 12/10/2013, seems not handled as expected with 'xwinwrap', even if the Wid is passed correctly from Qt. 'll try with mixing Qt C++ and X11Xlib lib fcns calls (...).
