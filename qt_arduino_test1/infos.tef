@@ -1,0 +1,18 @@
+## CONTROLLING ARDUINO WITH A GUI IN QT ##
+
+# to be able to compile & link against the 'qextserialport' as a shared library:
+
+# 1: go to the extracted directory, then:
+qmake
+make
+sudo make install
+
+# 2: once the library has been correctly generated & installed, we add the following to the '.pro' file
+CONFIG += extserialport
+
+# 3: then, to compile:
+qmake
+make
+
+# 4: ultimately, to run:
+./<appname>
