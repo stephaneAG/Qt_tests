@@ -1,0 +1,12 @@
+# DesktopWindow Java Driver - example program using the shared C library DesktopWindow - by StephaneAG - 2013 #
+
+## compilation & execution instructions ##
+
+# Note:  this (test-implm) version doesn't set the 'jna' path 'harcoded' in the source code, so we have to precise it when compiling & also when running the program
+# Nb: the '*.java' file has to be named as the class it contains ( as the class is 'public' ), otherwise it will throw an error message when compiling
+
+# 1: to compile: 
+ ' javac -classpath jna.jar DesktopWindowDriver.java '
+
+# 2: to run:
+ ' java -classpath jna.jar:. DesktopWindowDriver '
