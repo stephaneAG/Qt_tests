@@ -1,0 +1,2 @@
+# to compile, add the following to the "*.pro" file
+CONFIG += qwt
